@@ -19,6 +19,7 @@ public class TestReco2Activity extends AppCompatActivity {
     private TextView trialTEXT;
     public int listIter = 0;
 
+    // test list of words
     public ArrayList<vocaWord> insectsList;
     {
         insectsList = new ArrayList<vocaWord>() {{
@@ -51,6 +52,7 @@ public class TestReco2Activity extends AppCompatActivity {
         trialTEXT.setText("Trial : " + insectsList.get(listIter).getTrial());
     }
 
+    // launch vocal recognition
     public void onStartClick(View view){
 
         if(view.getId() == R.id.imageButton){
@@ -58,23 +60,16 @@ public class TestReco2Activity extends AppCompatActivity {
         }
     }
 
-    public void onNextClick(View view){
-        if(insectsList.get(listIter).getSuccess() < 1)
-            insectsList.get(listIter).setSuccess(0);
-
-        listIter = (listIter + 1)%15;
-        resultTEXT.setText("Response : ");
-        matchTEXT.setText("To match : " + insectsList.get(listIter).getWord());
-        trialTEXT.setText("Trial : " + insectsList.get(listIter).getTrial());
-    }
 
     public void getSpeechInput(){
 
+        // init the vocal recognition
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-GB");
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say something !");
 
+        // start the vocal recognition
         try {
             startActivityForResult(intent, 10);
         }
@@ -95,7 +90,10 @@ public class TestReco2Activity extends AppCompatActivity {
         {
             case 10: if(result_code == RESULT_OK && intent != null)
                         {
+                            // retrieve the speech-to-text String
                             ArrayList<String> result = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+                            // if it matchs with the word to repeat
                             if(result.get(0).equals(insectsList.get(listIter).getWord() ) ){
 
                                 resultTEXT.setText("MATCH");
@@ -110,6 +108,24 @@ public class TestReco2Activity extends AppCompatActivity {
                         }
                         break;
         }
+    }
+
+
+    // To go to the next word to repeat
+    public void onNextClick(View view){
+
+        // first change trial state ...
+        if(insectsList.get(listIter).getSuccess() < 1)
+            insectsList.get(listIter).setSuccess(0);
+
+
+        // ... then iterate ...
+        listIter = (listIter + 1)%15;
+
+        // ... and re-display data
+        resultTEXT.setText("Response : ");
+        matchTEXT.setText("To match : " + insectsList.get(listIter).getWord());
+        trialTEXT.setText("Trial : " + insectsList.get(listIter).getTrial());
     }
 }
 
