@@ -17,6 +17,7 @@ public class TestReco2Activity extends AppCompatActivity {
     private TextView resultTEXT;
     private TextView matchTEXT;
     private TextView trialTEXT;
+    private TextView wordListTEXT;
     public int listIter = 0;
 
     // test list of words
@@ -48,8 +49,25 @@ public class TestReco2Activity extends AppCompatActivity {
         resultTEXT = findViewById(R.id.TVresult);
         matchTEXT = findViewById(R.id.ToMatch);
         trialTEXT = findViewById(R.id.trial);
+        wordListTEXT = findViewById(R.id.wordList);
+        setDisplay("");
+    }
+
+
+    // general displaying
+    // only need the result String of the voice recognition
+    public void setDisplay(String result){
+        resultTEXT.setText("Response : " + result);
         matchTEXT.setText("To match : " + insectsList.get(listIter).getWord());
         trialTEXT.setText("Trial : " + insectsList.get(listIter).getTrial());
+
+        // this loop display already matched words
+        wordListTEXT.setText("Word list :\n");
+        for(int i=0 ; i<insectsList.size() ; i++){
+            if(insectsList.get(i).getSuccess() == 1) {
+                wordListTEXT.setText(wordListTEXT.getText() + "\n" + insectsList.get(i).getWord());
+            }
+        }
     }
 
     // launch vocal recognition
@@ -96,14 +114,12 @@ public class TestReco2Activity extends AppCompatActivity {
                             // if it matchs with the word to repeat
                             if(result.get(0).equals(insectsList.get(listIter).getWord() ) ){
 
-                                resultTEXT.setText("MATCH");
                                 insectsList.get(listIter).setSuccess(1);
-                                trialTEXT.setText("Trial : " + insectsList.get(listIter).getTrial());
+                                setDisplay("MATCH");
                             }
                             else {
-                                resultTEXT.setText("FAIL ! You said : " + result.get(0));
                                 insectsList.get(listIter).setSuccess(0);
-                                trialTEXT.setText("Trial : " + insectsList.get(listIter).getTrial());
+                                setDisplay("FAIL ! You said : " + result.get(0));
                             }
                         }
                         break;
@@ -123,9 +139,7 @@ public class TestReco2Activity extends AppCompatActivity {
         listIter = (listIter + 1)%15;
 
         // ... and re-display data
-        resultTEXT.setText("Response : ");
-        matchTEXT.setText("To match : " + insectsList.get(listIter).getWord());
-        trialTEXT.setText("Trial : " + insectsList.get(listIter).getTrial());
+        setDisplay("");
     }
 }
 
