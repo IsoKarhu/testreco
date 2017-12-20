@@ -53,6 +53,7 @@ public class TestReco2Activity extends AppCompatActivity {
     }
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,6 +152,25 @@ public class TestReco2Activity extends AppCompatActivity {
 
         // ... and re-display data
         setDisplay("");
+
+
+        Toast.makeText(this, bodyList.get(1).getWord(), Toast.LENGTH_LONG).show();
+
+
+        MOTSBDD motsBdd = new MOTSBDD(this);
+        Mots mots = new Mots(bodyList.get(1).getWord(), "0", "0");
+        motsBdd.open();
+        motsBdd.insertMots(mots);
+
+        Mots motsfrombdd = motsBdd.getLivreWithTitre(mots.getWord());
+        if(motsfrombdd != null){
+            Toast.makeText(this, motsfrombdd.toString(), Toast.LENGTH_LONG).show();
+        }
+        else
+            Toast.makeText(this, "Info window clicked 2", Toast.LENGTH_SHORT).show();
+        motsBdd.close();
+
+
     }
 }
 
