@@ -41,6 +41,17 @@ public class TestReco2Activity extends AppCompatActivity {
             add(new vocaWord("cicada"));
         }};
     }
+    public ArrayList<vocaWord> bodyList;
+    {
+        bodyList = new ArrayList<vocaWord>() {{
+            add(new vocaWord("arm"));
+            add(new vocaWord("finger"));
+            add(new vocaWord("foot"));
+            add(new vocaWord("hand"));
+            add(new vocaWord("head"));
+        }};
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +69,14 @@ public class TestReco2Activity extends AppCompatActivity {
     // only need the result String of the voice recognition
     public void setDisplay(String result){
         resultTEXT.setText("Response : " + result);
-        matchTEXT.setText("To match : " + insectsList.get(listIter).getWord());
-        trialTEXT.setText("Trial : " + insectsList.get(listIter).getTrial());
+        matchTEXT.setText("To match : " + bodyList.get(listIter).getWord());
+        trialTEXT.setText("Trial : " + bodyList.get(listIter).getTrial());
 
         // this loop display already matched words
         wordListTEXT.setText("Word list :\n");
-        for(int i=0 ; i<insectsList.size() ; i++){
-            if(insectsList.get(i).getSuccess() == 1) {
-                wordListTEXT.setText(wordListTEXT.getText() + "\n" + insectsList.get(i).getWord());
+        for(int i=0 ; i<bodyList.size() ; i++){
+            if(bodyList.get(i).getSuccess() == 1) {
+                wordListTEXT.setText(wordListTEXT.getText() + "\n" + bodyList.get(i).getWord());
             }
         }
     }
@@ -112,13 +123,13 @@ public class TestReco2Activity extends AppCompatActivity {
                             ArrayList<String> result = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
                             // if it matchs with the word to repeat
-                            if(result.get(0).equals(insectsList.get(listIter).getWord() ) ){
+                            if(result.get(0).equals(bodyList.get(listIter).getWord() ) ){
 
-                                insectsList.get(listIter).setSuccess(1);
+                                bodyList.get(listIter).setSuccess(1);
                                 setDisplay("MATCH");
                             }
                             else {
-                                insectsList.get(listIter).setSuccess(0);
+                                bodyList.get(listIter).setSuccess(0);
                                 setDisplay("FAIL ! You said : " + result.get(0));
                             }
                         }
@@ -131,12 +142,12 @@ public class TestReco2Activity extends AppCompatActivity {
     public void onNextClick(View view){
 
         // first change trial state ...
-        if(insectsList.get(listIter).getSuccess() < 1)
-            insectsList.get(listIter).setSuccess(0);
+        if(bodyList.get(listIter).getSuccess() < 1)
+            bodyList.get(listIter).setSuccess(0);
 
 
         // ... then iterate ...
-        listIter = (listIter + 1)%15;
+        listIter = (listIter + 1)%5;
 
         // ... and re-display data
         setDisplay("");
