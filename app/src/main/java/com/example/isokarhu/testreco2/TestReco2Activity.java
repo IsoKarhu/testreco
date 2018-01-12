@@ -19,6 +19,7 @@ public class TestReco2Activity extends AppCompatActivity {
     private TextView trialTEXT;
     private TextView wordListTEXT;
     public int listIter = 0;
+    public int calcItera = 0;
 
     // test list of words
     public ArrayList<vocaWord> insectsList;
@@ -50,6 +51,7 @@ public class TestReco2Activity extends AppCompatActivity {
             add(new vocaWord("hand"));
             add(new vocaWord("head"));
         }};
+        //insertintobdd();
     }
 
 
@@ -138,6 +140,45 @@ public class TestReco2Activity extends AppCompatActivity {
         }
     }
 
+    public void insertintobdd(){
+        MOTSBDD motsBdd = new MOTSBDD(this);
+        Mots mots = null;
+
+        motsBdd.open();
+
+        for (int i=0 ; i<5; i++){
+            mots = new Mots(bodyList.get(i).getWord(), "0", "0");
+            motsBdd.insertMots(mots);
+        }
+        motsBdd.close();
+    }
+
+    public String searchintobdd(String mots){
+
+        MOTSBDD motsBdd = new MOTSBDD(this);
+        motsBdd.open();
+
+        if (calcItera == 0){
+            for (int i=0 ; i<5; i++){
+                Mots save = new Mots(bodyList.get(i).getWord(), "0", "0");
+                Toast.makeText(this, (CharSequence) save, Toast.LENGTH_SHORT).show();
+                motsBdd.insertMots(save);
+            }
+            calcItera = 1;
+        }
+
+        Mots motsfrombdd = motsBdd.getLivreWithTitre(mots);
+        Toast.makeText(this, mots, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, motsfrombdd.toString(), Toast.LENGTH_SHORT).show();
+
+        if (motsfrombdd != null) {
+            Toast.makeText(this, motsfrombdd.toString(), Toast.LENGTH_LONG).show();
+        } else
+            Toast.makeText(this, "Not Found", Toast.LENGTH_SHORT).show();
+        motsBdd.close();
+
+        return null;
+    }
 
     // To go to the next word to repeat
     public void onNextClick(View view){
@@ -153,21 +194,15 @@ public class TestReco2Activity extends AppCompatActivity {
         // ... and re-display data
         setDisplay("");
 
+        //Toast.makeText(this, bodyList.get(0).getWord(), Toast.LENGTH_SHORT).show();
 
-        Toast.makeText(this, bodyList.get(1).getWord(), Toast.LENGTH_LONG).show();
-
+        searchintobdd(bodyList.get(listIter).getWord());
 
         MOTSBDD motsBdd = new MOTSBDD(this);
-        Mots mots = new Mots(bodyList.get(1).getWord(), "0", "0");
         motsBdd.open();
-        motsBdd.insertMots(mots);
-
-        Mots motsfrombdd = motsBdd.getLivreWithTitre(mots.getWord());
-        if(motsfrombdd != null){
-            Toast.makeText(this, motsfrombdd.toString(), Toast.LENGTH_LONG).show();
+        for(int i = 0; i<25; i++){
+            Toast.makeText(this, "test : " +motsBdd.selectall(i) + " -> Fin test \n", Toast.LENGTH_SHORT).show();
         }
-        else
-            Toast.makeText(this, "Info window clicked 2", Toast.LENGTH_SHORT).show();
         motsBdd.close();
 
 

@@ -41,19 +41,33 @@ public class MOTSBDD {
         bdd.close();
     }
 
+    public String selectall(int id) {
+        Cursor cursor = bdd.query(TABLE_MOTS, new String[] { COL_ID, COL_WORD,
+                        COL_FLAG, COL_IMAGE }, COL_ID + "=?",
+                new String[] { String.valueOf(id) }, null, null, null, null);
+        if (cursor != null)
+            cursor.moveToFirst();
+        String contact = Integer.parseInt(cursor.getString(0)) + cursor.getString(1) + cursor.getString(2);
+        return contact;
+    }
+
+
     public SQLiteDatabase getBDD(){
         return bdd;
     }
 
     public long insertMots(Mots mots){
-        //Création d'un ContentValues (fonctionne comme une HashMap)
+        /*
+        String INSERT_BDD_Wd = "INSERT INTO " + TABLE_MOTS + "(WD, FG, IM) VALUES (" + mots.getWord() + ", " + mots.getFlag() + ", " + mots.getImage() +")";
+        bdd.execSQL(INSERT_BDD_Wd);
+        */
+
         ContentValues values = new ContentValues();
-        // Revoir struct mots
-        //values.put(COL_ID, mots.getId());
+
         values.put(COL_WORD, mots.getWord());
         values.put(COL_FLAG, mots.getFlag());
         values.put(COL_IMAGE, mots.getImage());
-        //A revoir
+
         return bdd.insert(TABLE_MOTS, null, values);
     }
 
@@ -66,6 +80,11 @@ public class MOTSBDD {
         values.put(COL_IMAGE, mots.getImage());
         //A revoir
         return bdd.update(TABLE_MOTS, values, COL_ID + " = " +id, null);
+    }
+
+    public int getlength () {
+        Cursor lll = bdd.rawQuery("select COL_ID from " + TABLE_MOTS, null);
+        return lll.getCount();
     }
 
     public int removeLivreWithID(int id){
